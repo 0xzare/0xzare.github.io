@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ali Zareshahi — AI Developer</title>
+<meta name="description" content="Ali Zareshahi — AI Developer specializing in RAG pipelines, AI agents, and Persian NLP.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='42' fill='%23071A12'/><circle cx='50' cy='50' r='16' fill='%2346E29B'/></svg>">
+<style>
+:root {
+  --bg: #06120C;
+  --bg-2: #0A1F15;
+  --card: #0E271B;
+  --card-border: #1B4530;
+  --green: #46E29B;
+  --green-soft: #7EE2A8;
+  --green-dim: #1F8A5D;
+  --text: #E8F5EE;
+  --muted: #9DB8AA;
+  --mono: 'JetBrains Mono', monospace;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', -apple-system, 'Segoe UI', sans-serif;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+::selection { background: var(--green); color: #06120C; }
+
+/* ---------- nav ---------- */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 6vw;
+  background: rgba(6, 18, 12, 0.82);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(70, 226, 155, 0.12);
+}
+.logo { font-family: var(--mono); font-weight: 600; font-size: 17px; color: var(--green); text-decoration: none; letter-spacing: 0.5px; }
+.logo span { color: var(--muted); }
+.nav-links { display: flex; gap: 30px; }
+.nav-links a { color: var(--muted); text-decoration: none; font-size: 14.5px; font-weight: 500; transition: color 0.2s; }
+.nav-links a:hover { color: var(--green); }
+@media (max-width: 720px) { .nav-links { display: none; } }
+
+/* ---------- hero ---------- */
+header {
+  position: relative; min-height: 100vh;
+  display: flex; align-items: center;
+  padding: 120px 6vw 80px;
+  background: radial-gradient(ellipse 90% 70% at 70% 20%, #10331F 0%, var(--bg) 62%);
+}
+#net { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0.55; }
+.hero-inner { position: relative; max-width: 860px; }
+.kicker {
+  font-family: var(--mono); font-size: 15px; color: var(--green);
+  margin-bottom: 18px; display: inline-block;
+}
+h1 {
+  font-size: clamp(42px, 7vw, 74px); font-weight: 800; line-height: 1.06;
+  letter-spacing: -1.5px; margin-bottom: 18px;
+}
+h1 em { font-style: normal; color: var(--green); }
+.hero-sub {
+  font-size: clamp(17px, 2.2vw, 21px); color: var(--muted);
+  max-width: 620px; margin-bottom: 16px;
+}
+.type-line { font-family: var(--mono); font-size: 15px; color: var(--green-soft); margin-bottom: 38px; min-height: 24px; }
+.type-line::after { content: '_'; color: var(--green); animation: blink 1s step-end infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+.btn-row { display: flex; gap: 14px; flex-wrap: wrap; }
+.btn {
+  display: inline-flex; align-items: center; gap: 9px;
+  padding: 13px 26px; border-radius: 10px;
+  font-size: 15px; font-weight: 600; text-decoration: none;
+  transition: transform 0.18s, box-shadow 0.18s, background 0.18s;
+}
+.btn-primary { background: var(--green); color: #06120C; }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(70,226,155,0.35); }
+.btn-ghost { border: 1px solid var(--card-border); color: var(--text); background: rgba(14,39,27,0.5); }
+.btn-ghost:hover { border-color: var(--green-dim); transform: translateY(-2px); }
+.btn svg { width: 18px; height: 18px; fill: currentColor; }
+
+/* ---------- sections ---------- */
+section { padding: 96px 6vw; max-width: 1160px; margin: 0 auto; }
+.sec-label { font-family: var(--mono); color: var(--green); font-size: 14px; letter-spacing: 1px; }
+h2 { font-size: clamp(28px, 4vw, 38px); font-weight: 700; letter-spacing: -0.5px; margin: 8px 0 14px; }
+.sec-head { margin-bottom: 44px; }
+.sec-head p { color: var(--muted); max-width: 640px; }
+.rule { width: 64px; height: 4px; border-radius: 2px; background: linear-gradient(90deg, var(--green), var(--green-dim)); margin-top: 18px; }
+
+/* ---------- about ---------- */
+.about-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 48px; align-items: start; }
+@media (max-width: 860px) { .about-grid { grid-template-columns: 1fr; } }
+.about-text p { color: var(--muted); margin-bottom: 16px; font-size: 16.5px; }
+.about-text strong { color: var(--text); }
+.code-card {
+  background: var(--card); border: 1px solid var(--card-border); border-radius: 14px;
+  font-family: var(--mono); font-size: 13.5px; overflow: hidden;
+  box-shadow: 0 18px 50px rgba(0,0,0,0.4);
+}
+.code-bar { display: flex; gap: 7px; padding: 13px 16px; border-bottom: 1px solid var(--card-border); }
+.code-bar i { width: 11px; height: 11px; border-radius: 50%; background: #2E5B43; }
+.code-bar i:first-child { background: var(--green); }
+.code-card pre { padding: 20px 22px; line-height: 1.75; color: var(--green-soft); overflow-x: auto; }
+.tok-k { color: #5AB3F0; } .tok-s { color: #F2CC7B; } .tok-c { color: #6E8A7B; }
+
+/* ---------- skills ---------- */
+.skill-groups { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 22px; }
+.skill-card {
+  background: var(--card); border: 1px solid var(--card-border); border-radius: 14px;
+  padding: 26px; transition: transform 0.2s, border-color 0.2s;
+}
+.skill-card:hover { transform: translateY(-4px); border-color: var(--green-dim); }
+.skill-card h3 { font-size: 16px; margin-bottom: 16px; color: var(--green-soft); display: flex; align-items: center; gap: 10px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+  font-family: var(--mono); font-size: 12.5px; color: var(--text);
+  background: rgba(70,226,155,0.08); border: 1px solid rgba(70,226,155,0.22);
+  padding: 5px 12px; border-radius: 999px;
+}
+
+/* ---------- experience ---------- */
+.timeline { position: relative; margin-left: 8px; }
+.timeline::before {
+  content: ''; position: absolute; left: 0; top: 6px; bottom: 6px; width: 2px;
+  background: linear-gradient(180deg, var(--green), var(--card-border));
+}
+.t-item { position: relative; padding: 0 0 38px 34px; }
+.t-item::before {
+  content: ''; position: absolute; left: -5px; top: 7px; width: 12px; height: 12px;
+  border-radius: 50%; background: var(--bg); border: 3px solid var(--green);
+}
+.t-item h3 { font-size: 17.5px; }
+.t-item h3 span { color: var(--green); }
+.t-date { font-family: var(--mono); font-size: 12.5px; color: var(--muted); margin: 3px 0 8px; }
+.t-item p { color: var(--muted); font-size: 15px; max-width: 720px; }
+
+/* ---------- projects ---------- */
+.proj-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 22px; }
+.proj-card {
+  background: var(--card); border: 1px solid var(--card-border); border-radius: 14px;
+  padding: 28px; text-decoration: none; color: var(--text); display: block;
+  transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+.proj-card:hover { transform: translateY(-5px); border-color: var(--green-dim); box-shadow: 0 16px 44px rgba(0,0,0,0.45); }
+.proj-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+.proj-top .ico { font-size: 26px; }
+.proj-top svg { width: 18px; height: 18px; stroke: var(--muted); }
+.proj-card h3 { font-size: 18px; margin-bottom: 8px; }
+.proj-card p { color: var(--muted); font-size: 14.5px; margin-bottom: 16px; }
+.proj-tags { display: flex; flex-wrap: wrap; gap: 7px; }
+.proj-tags span { font-family: var(--mono); font-size: 11.5px; color: var(--green-soft); }
+
+/* ---------- publication ---------- */
+.pub {
+  background: linear-gradient(120deg, rgba(70,226,155,0.09), rgba(14,39,27,0.6));
+  border: 1px solid var(--card-border); border-radius: 14px; padding: 30px 32px;
+  display: flex; gap: 20px; align-items: flex-start;
+}
+.pub .ico { font-size: 30px; }
+.pub h3 { font-size: 17.5px; margin-bottom: 6px; }
+.pub p { color: var(--muted); font-size: 14.5px; }
+
+/* ---------- contact ---------- */
+.contact { text-align: center; }
+.contact p { color: var(--muted); max-width: 520px; margin: 0 auto 36px; }
+
+/* ---------- footer ---------- */
+footer {
+  border-top: 1px solid rgba(70,226,155,0.12);
+  padding: 30px 6vw; text-align: center;
+  color: var(--muted); font-size: 13.5px; font-family: var(--mono);
+}
+footer a { color: var(--green); text-decoration: none; }
+
+/* ---------- reveal ---------- */
+.reveal { opacity: 0; transform: translateY(26px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal.on { opacity: 1; transform: none; }
+</style>
+<noscript><style>.reveal { opacity: 1; transform: none; }</style></noscript>
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="#">0xzare<span>@github</span> ~ %</a>
+  <div class="nav-links">
+    <a href="#about">About</a>
+    <a href="#skills">Skills</a>
+    <a href="#experience">Experience</a>
+    <a href="#projects">Projects</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<header>
+  <canvas id="net"></canvas>
+  <div class="hero-inner">
+    <span class="kicker">Hi, my name is</span>
+    <h1>Ali Zareshahi.<br>I build <em>AI systems</em> that retrieve, reason &amp; act.</h1>
+    <p class="hero-sub">AI Developer specializing in <b>RAG pipelines</b>, <b>agentic systems</b>, and <b>Persian NLP</b> — turning large-scale text into intelligent, searchable products.</p>
+    <div class="type-line" id="typer"></div>
+    <div class="btn-row">
+      <a class="btn btn-primary" href="https://github.com/0xzare" target="_blank" rel="noopener">
+        <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+      <a class="btn btn-ghost" href="https://linkedin.com/in/zareshahi" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M19 0h-14c-2.76 0-5 2.24-5 5v14c0 2.76 2.24 5 5 5h14c2.76 0 5-2.24 5-5v-5c0-2.76-2.24-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.27c-.97 0-1.75-.79-1.75-1.76s.78-1.76 1.75-1.76 1.75.79 1.75 1.76-.78 1.76-1.75 1.76zm13.5 12.27h-3v-5.6c0-3.37-4-3.11-4 0v5.6h-3v-11h3v1.77c1.4-2.59 7-2.78 7 2.48v6.75z"/></svg>
+        LinkedIn
+      </a>
+      <a class="btn btn-ghost" href="mailto:a.zareshahi1377@gmail.com">
+        <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        Email
+      </a>
+    </div>
+  </div>
+</header>
+
+<section id="about">
+  <div class="sec-head reveal">
+    <span class="sec-label">01. about</span>
+    <h2>About Me</h2>
+    <div class="rule"></div>
+  </div>
+  <div class="about-grid">
+    <div class="about-text reveal">
+      <p>I'm an AI developer with <strong>4+ years of experience</strong> building production NLP and retrieval systems. I hold an <strong>M.Sc. in Artificial Intelligence &amp; Robotics</strong> and focus on making large language models genuinely useful — grounded, retrieval-augmented, and connected to real tools.</p>
+      <p>My recent work includes <strong>semantic search platforms for large-scale religious text corpora</strong>, RAG pipelines with semantic chunking and LLM propositioning, and <strong>AI agents</strong> that operate geospatial services. I've fine-tuned <strong>BERT and Whisper</strong> models for Persian, built NER and OCR post-correction systems, and shipped them all as scalable APIs.</p>
+      <p>I also published research on <strong>measuring semantic similarity of Persian sentences using ParsBERT</strong> (2024).</p>
+    </div>
+    <div class="code-card reveal">
+      <div class="code-bar"><i></i><i></i><i></i></div>
+      <pre><span class="tok-c"># ali.py</span>
+<span class="tok-k">class</span> AliZareshahi:
+    role = <span class="tok-s">"AI Developer"</span>
+    focus = [<span class="tok-s">"RAG"</span>, <span class="tok-s">"Agents"</span>,
+             <span class="tok-s">"Persian NLP"</span>]
+    degree = <span class="tok-s">"M.Sc. AI &amp; Robotics"</span>
+    years = <span class="tok-s">4</span>
+
+    <span class="tok-k">def</span> build(self, idea):
+        <span class="tok-k">return</span> production(idea)</pre>
+    </div>
+  </div>
+</section>
+
+<section id="skills">
+  <div class="sec-head reveal">
+    <span class="sec-label">02. skills</span>
+    <h2>Tech Stack</h2>
+    <div class="rule"></div>
+  </div>
+  <div class="skill-groups">
+    <div class="skill-card reveal">
+      <h3>🤖 AI / ML</h3>
+      <div class="chips"><span class="chip">LLMs &amp; RAG</span><span class="chip">AI Agents</span><span class="chip">BERT</span><span class="chip">Whisper</span><span class="chip">Fine-tuning</span><span class="chip">NER</span><span class="chip">OCR</span><span class="chip">Hugging Face</span></div>
+    </div>
+    <div class="skill-card reveal">
+      <h3>🐍 Backend</h3>
+      <div class="chips"><span class="chip">Python</span><span class="chip">Django</span><span class="chip">FastAPI</span><span class="chip">REST API</span><span class="chip">Node.js</span><span class="chip">Next.js</span></div>
+    </div>
+    <div class="skill-card reveal">
+      <h3>🗄️ Data &amp; Search</h3>
+      <div class="chips"><span class="chip">Qdrant</span><span class="chip">pgvector</span><span class="chip">Elasticsearch</span><span class="chip">Supabase</span><span class="chip">PostgreSQL</span></div>
+    </div>
+    <div class="skill-card reveal">
+      <h3>⚙️ DevOps &amp; Tools</h3>
+      <div class="chips"><span class="chip">Docker</span><span class="chip">Linux</span><span class="chip">Git</span><span class="chip">Jira</span><span class="chip">CI/CD</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="experience">
+  <div class="sec-head reveal">
+    <span class="sec-label">03. experience</span>
+    <h2>Where I've Worked</h2>
+    <div class="rule"></div>
+  </div>
+  <div class="timeline">
+    <div class="t-item reveal">
+      <h3>AI Developer <span>@ Hamtta</span></h3>
+      <div class="t-date">Nov 2025 — Present</div>
+      <p>Building AI-powered products with LLM-based pipelines and retrieval systems.</p>
+    </div>
+    <div class="t-item reveal">
+      <h3>AI Developer <span>@ Saafaa</span></h3>
+      <div class="t-date">May 2025 — Present · Remote</div>
+      <p>Developing agentic AI features and integrating LLMs into production services.</p>
+    </div>
+    <div class="t-item reveal">
+      <h3>AI Developer <span>@ BizGPT</span></h3>
+      <div class="t-date">Jul 2024 — Aug 2024</div>
+      <p>Built RAG chatbot infrastructure for business knowledge bases.</p>
+    </div>
+    <div class="t-item reveal">
+      <h3>AI Developer <span>@ Montazer.ir</span></h3>
+      <div class="t-date">Oct 2023 — Jul 2024</div>
+      <p>Semantic search and NLP services over large-scale religious text corpora; fine-tuned language models for Persian and Arabic content.</p>
+    </div>
+    <div class="t-item reveal">
+      <h3>AI Developer <span>@ Bagher al-Ulum Institute</span></h3>
+      <div class="t-date">Mar 2023 — Sep 2023</div>
+      <p>NLP pipelines including NER and OCR post-correction for digitized archives.</p>
+    </div>
+    <div class="t-item reveal">
+      <h3>AI Intern <span>@ CRCIS (Noor)</span></h3>
+      <div class="t-date">Aug 2021 — Oct 2021</div>
+      <p>Research internship on Persian text processing and semantic similarity.</p>
+    </div>
+    <div class="t-item reveal">
+      <h3>Front-End Developer <span>@ Saafaa</span></h3>
+      <div class="t-date">Jun 2018 — Oct 2019</div>
+      <p>Built web front-ends; foundation in JavaScript and modern web development.</p>
+    </div>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="sec-head reveal">
+    <span class="sec-label">04. projects</span>
+    <h2>Featured Work</h2>
+    <div class="rule"></div>
+  </div>
+  <div class="proj-grid">
+    <a class="proj-card reveal" href="https://ai.inoor.ir/" target="_blank" rel="noopener">
+      <div class="proj-top"><span class="ico">🕌</span><svg fill="none" viewBox="0 0 24 24" stroke-width="2"><path d="M7 17L17 7M17 7H8M17 7V16" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <h3>ai.inoor.ir</h3>
+      <p>Semantic similarity lab &amp; AI-powered search over Hadith and religious texts — embedding-based retrieval at corpus scale.</p>
+      <div class="proj-tags"><span>Python</span><span>Embeddings</span><span>Semantic Search</span></div>
+    </a>
+    <a class="proj-card reveal" href="https://aiparsa.ir/" target="_blank" rel="noopener">
+      <div class="proj-top"><span class="ico">🧠</span><svg fill="none" viewBox="0 0 24 24" stroke-width="2"><path d="M7 17L17 7M17 7H8M17 7V16" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <h3>Parsa — aiparsa.ir</h3>
+      <p>RAG platform with semantic chunking and LLM propositioning for accurate, grounded answers over custom knowledge.</p>
+      <div class="proj-tags"><span>RAG</span><span>LLM</span><span>Vector DB</span></div>
+    </a>
+    <a class="proj-card reveal" href="https://geotajak.ir/" target="_blank" rel="noopener">
+      <div class="proj-top"><span class="ico">🗺️</span><svg fill="none" viewBox="0 0 24 24" stroke-width="2"><path d="M7 17L17 7M17 7H8M17 7V16" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <h3>GeoTajak</h3>
+      <p>Web-based geospatial data management platform with map visualization and AI agents driving GeoServer WPS services.</p>
+      <div class="proj-tags"><span>GIS</span><span>OpenLayers</span><span>AI Agents</span></div>
+    </a>
+  </div>
+  <div style="height:28px"></div>
+  <div class="pub reveal">
+    <span class="ico">📄</span>
+    <div>
+      <h3>Publication — Measuring Semantic Similarity of Persian Sentences Using ParsBERT (2024)</h3>
+      <p>Research on transformer-based semantic similarity for Persian, applied to large-scale retrieval of religious texts.</p>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="contact">
+  <div class="sec-head reveal" style="text-align:center">
+    <span class="sec-label">05. contact</span>
+    <h2>Get In Touch</h2>
+    <div class="rule" style="margin:18px auto 0"></div>
+  </div>
+  <p class="reveal">Whether you have a project involving RAG, agents, or NLP — or just want to say hi — my inbox is always open.</p>
+  <div class="btn-row reveal" style="justify-content:center">
+    <a class="btn btn-primary" href="mailto:a.zareshahi1377@gmail.com">Say Hello 👋</a>
+    <a class="btn btn-ghost" href="https://linkedin.com/in/zareshahi" target="_blank" rel="noopener">LinkedIn</a>
+  </div>
+</section>
+
+<footer>
+  Designed &amp; built with 💚 · <a href="https://github.com/0xzare" target="_blank" rel="noopener">github.com/0xzare</a>
+</footer>
+
+<script>
+// typing effect
+var phrases = [
+  'retrieval-augmented generation',
+  'agentic AI systems',
+  'semantic search at scale',
+  'Persian NLP & fine-tuning'
+];
+var typer = document.getElementById('typer');
+var pi = 0, ci = 0, deleting = false;
+function tick() {
+  var full = '> ' + phrases[pi];
+  if (!deleting) {
+    ci++;
+    if (ci >= full.length) { deleting = true; setTimeout(tick, 1800); typer.textContent = full; return; }
+  } else {
+    ci--;
+    if (ci <= 2) { deleting = false; pi = (pi + 1) % phrases.length; }
+  }
+  typer.textContent = full.slice(0, ci);
+  setTimeout(tick, deleting ? 28 : 55);
+}
+tick();
+
+// neural network canvas
+var cv = document.getElementById('net');
+var ctx = cv.getContext('2d');
+var nodes = [];
+function resize() {
+  cv.width = cv.offsetWidth * devicePixelRatio;
+  cv.height = cv.offsetHeight * devicePixelRatio;
+  ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+}
+resize();
+window.addEventListener('resize', resize);
+var N = Math.min(46, Math.floor(window.innerWidth / 30));
+for (var i = 0; i < N; i++) {
+  nodes.push({
+    x: Math.random() * cv.offsetWidth,
+    y: Math.random() * cv.offsetHeight,
+    vx: (Math.random() - 0.5) * 0.35,
+    vy: (Math.random() - 0.5) * 0.35,
+    r: 1.5 + Math.random() * 2
+  });
+}
+function frame() {
+  var w = cv.offsetWidth, h = cv.offsetHeight;
+  ctx.clearRect(0, 0, w, h);
+  for (var i = 0; i < nodes.length; i++) {
+    var n = nodes[i];
+    n.x += n.vx; n.y += n.vy;
+    if (n.x < 0 || n.x > w) n.vx *= -1;
+    if (n.y < 0 || n.y > h) n.vy *= -1;
+  }
+  for (var i = 0; i < nodes.length; i++) {
+    for (var j = i + 1; j < nodes.length; j++) {
+      var a = nodes[i], b = nodes[j];
+      var dx = a.x - b.x, dy = a.y - b.y;
+      var d = Math.sqrt(dx * dx + dy * dy);
+      if (d < 150) {
+        ctx.strokeStyle = 'rgba(70, 226, 155, ' + (0.16 * (1 - d / 150)) + ')';
+        ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+      }
+    }
+  }
+  for (var i = 0; i < nodes.length; i++) {
+    var n = nodes[i];
+    ctx.fillStyle = 'rgba(70, 226, 155, 0.75)';
+    ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2); ctx.fill();
+  }
+  requestAnimationFrame(frame);
+}
+frame();
+
+// scroll reveal
+var io = new IntersectionObserver(function (entries) {
+  entries.forEach(function (e) {
+    if (e.isIntersecting) { e.target.classList.add('on'); io.unobserve(e.target); }
+  });
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
+</script>
+</body>
+</html>

@@ -180,6 +180,16 @@ footer {
 }
 footer a { color: var(--green); text-decoration: none; }
 
+/* ---------- knowledge graph ---------- */
+.graph-wrap {
+  background: radial-gradient(ellipse 80% 80% at 50% 40%, #0F2C1D 0%, var(--card) 70%);
+  border: 1px solid var(--card-border); border-radius: 16px;
+  padding: 10px 10px 16px; overflow: hidden;
+}
+#kgraph { width: 100%; height: 620px; display: block; cursor: grab; }
+@media (max-width: 720px) { #kgraph { height: 480px; } }
+.graph-hint { text-align: center; color: var(--muted); font-family: var(--mono); font-size: 12.5px; margin-top: 8px; }
+
 /* ---------- reveal ---------- */
 .reveal { opacity: 0; transform: translateY(26px); transition: opacity 0.7s ease, transform 0.7s ease; }
 .reveal.on { opacity: 1; transform: none; }
@@ -193,6 +203,7 @@ footer a { color: var(--green); text-decoration: none; }
   <div class="nav-links">
     <a href="#about">About</a>
     <a href="#skills">Skills</a>
+    <a href="#graph">Graph</a>
     <a href="#experience">Experience</a>
     <a href="#projects">Projects</a>
     <a href="#contact">Contact</a>
@@ -277,9 +288,21 @@ footer a { color: var(--green); text-decoration: none; }
   </div>
 </section>
 
+<section id="graph">
+  <div class="sec-head reveal">
+    <span class="sec-label">03. knowledge graph</span>
+    <h2>Knowledge Graph</h2>
+    <div class="rule"></div>
+  </div>
+  <div class="graph-wrap reveal">
+    <canvas id="kgraph"></canvas>
+    <div class="graph-hint">drag nodes · hover to explore connections</div>
+  </div>
+</section>
+
 <section id="experience">
   <div class="sec-head reveal">
-    <span class="sec-label">03. experience</span>
+    <span class="sec-label">04. experience</span>
     <h2>Where I've Worked</h2>
     <div class="rule"></div>
   </div>
@@ -324,7 +347,7 @@ footer a { color: var(--green); text-decoration: none; }
 
 <section id="projects">
   <div class="sec-head reveal">
-    <span class="sec-label">04. projects</span>
+    <span class="sec-label">05. projects</span>
     <h2>Featured Work</h2>
     <div class="rule"></div>
   </div>
@@ -360,7 +383,7 @@ footer a { color: var(--green); text-decoration: none; }
 
 <section id="contact" class="contact">
   <div class="sec-head reveal" style="text-align:center">
-    <span class="sec-label">05. contact</span>
+    <span class="sec-label">06. contact</span>
     <h2>Get In Touch</h2>
     <div class="rule" style="margin:18px auto 0"></div>
   </div>
@@ -449,6 +472,183 @@ function frame() {
   requestAnimationFrame(frame);
 }
 frame();
+
+// knowledge graph
+var gcv = document.getElementById('kgraph');
+var gctx = gcv.getContext('2d');
+var GW = 0, GH = 0;
+var GNODES = [], GLINKS = [], GADJ = { };
+var CATS = [
+  { id: 'ai', label: 'AI & LLMs', skills: ['RAG', 'AI Agents', 'Fine-tuning', 'BERT', 'Whisper', 'Hugging Face'] },
+  { id: 'nlp', label: 'Persian NLP', skills: ['NER', 'OCR', 'ParsBERT', 'Semantic Similarity'] },
+  { id: 'be', label: 'Backend', skills: ['Python', 'Django', 'FastAPI', 'REST API', 'Node.js', 'Next.js'] },
+  { id: 'data', label: 'Data & Search', skills: ['Qdrant', 'pgvector', 'Elasticsearch', 'Supabase', 'PostgreSQL'] },
+  { id: 'ops', label: 'DevOps', skills: ['Docker', 'Linux', 'Git', 'CI/CD'] },
+  { id: 'geo', label: 'Geospatial AI', skills: ['GIS', 'OpenLayers', 'GeoServer WPS'] }
+];
+function gResize() {
+  var w = gcv.parentNode.clientWidth - 20;
+  var h = window.innerWidth < 720 ? 480 : 620;
+  gcv.width = w * devicePixelRatio;
+  gcv.height = h * devicePixelRatio;
+  gcv.style.height = h + 'px';
+  gctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+  GW = w; GH = h;
+}
+gResize();
+window.addEventListener('resize', gResize);
+function gAdd(id, label, group, x, y) {
+  var n = { id: id, label: label, group: group, x: x, y: y, vx: 0, vy: 0 };
+  GNODES.push(n);
+  GADJ[id] = { };
+  return n;
+}
+function gLink(a, b, len) {
+  GLINKS.push({ a: a, b: b, len: len });
+  GADJ[a.id][b.id] = true;
+  GADJ[b.id][a.id] = true;
+}
+var gCenter = gAdd('ali', 'Ali Zareshahi', 0, GW / 2, GH / 2);
+for (var c = 0; c < CATS.length; c++) {
+  var ang = (c / CATS.length) * Math.PI * 2 - Math.PI / 2;
+  var cat = gAdd(CATS[c].id, CATS[c].label, 1, GW / 2 + Math.cos(ang) * 180, GH / 2 + Math.sin(ang) * 180);
+  gLink(gCenter, cat, 185);
+  for (var s = 0; s < CATS[c].skills.length; s++) {
+    var sa = ang + (s - (CATS[c].skills.length - 1) / 2) * 0.42;
+    var sk = gAdd(CATS[c].id + '_' + s, CATS[c].skills[s], 2, cat.x + Math.cos(sa) * 85, cat.y + Math.sin(sa) * 85);
+    gLink(cat, sk, 82);
+  }
+}
+var gHover = null, gDrag = null;
+function gTick() {
+  var i, j, n, m, dx, dy, d, f;
+  for (i = 0; i < GNODES.length; i++) {
+    for (j = i + 1; j < GNODES.length; j++) {
+      n = GNODES[i]; m = GNODES[j];
+      dx = n.x - m.x; dy = n.y - m.y;
+      d = Math.sqrt(dx * dx + dy * dy) || 1;
+      f = Math.min(2200 / (d * d), 2.2);
+      n.vx += (dx / d) * f; n.vy += (dy / d) * f;
+      m.vx -= (dx / d) * f; m.vy -= (dy / d) * f;
+    }
+  }
+  for (i = 0; i < GLINKS.length; i++) {
+    var L = GLINKS[i];
+    dx = L.b.x - L.a.x; dy = L.b.y - L.a.y;
+    d = Math.sqrt(dx * dx + dy * dy) || 1;
+    f = (d - L.len) * 0.05;
+    L.a.vx += (dx / d) * f; L.a.vy += (dy / d) * f;
+    L.b.vx -= (dx / d) * f; L.b.vy -= (dy / d) * f;
+  }
+  for (i = 0; i < GNODES.length; i++) {
+    n = GNODES[i];
+    n.vx += (GW / 2 - n.x) * 0.004;
+    n.vy += (GH / 2 - n.y) * 0.004;
+    n.vx *= 0.85; n.vy *= 0.85;
+    if (n === gCenter) { n.x = GW / 2; n.y = GH / 2; continue; }
+    if (n === gDrag) continue;
+    n.x += n.vx; n.y += n.vy;
+    var pad = 34;
+    if (n.x < pad) n.x = pad;
+    if (n.x > GW - pad) n.x = GW - pad;
+    if (n.y < pad) n.y = pad;
+    if (n.y > GH - pad) n.y = GH - pad;
+  }
+}
+function gRadius(n) { return n.group === 0 ? 26 : (n.group === 1 ? 11 : 5.5); }
+function gAlpha(n) {
+  if (!gHover) return 1;
+  if (n === gHover || GADJ[gHover.id][n.id]) return 1;
+  return 0.18;
+}
+function gDraw() {
+  gctx.clearRect(0, 0, GW, GH);
+  var i, n;
+  for (i = 0; i < GLINKS.length; i++) {
+    var L = GLINKS[i];
+    var hot = gHover && (L.a === gHover || L.b === gHover);
+    gctx.strokeStyle = hot ? 'rgba(70, 226, 155, 0.65)' : (gHover ? 'rgba(70, 226, 155, 0.06)' : 'rgba(70, 226, 155, 0.2)');
+    gctx.lineWidth = hot ? 1.6 : 1;
+    gctx.beginPath(); gctx.moveTo(L.a.x, L.a.y); gctx.lineTo(L.b.x, L.b.y); gctx.stroke();
+  }
+  for (i = 0; i < GNODES.length; i++) {
+    n = GNODES[i];
+    var a = gAlpha(n);
+    var r = gRadius(n);
+    gctx.globalAlpha = a;
+    if (n.group === 0) {
+      gctx.shadowColor = '#46E29B'; gctx.shadowBlur = 34;
+      gctx.fillStyle = '#46E29B';
+    } else if (n.group === 1) {
+      gctx.shadowColor = '#46E29B'; gctx.shadowBlur = 14;
+      gctx.fillStyle = '#2FBF7F';
+    } else {
+      gctx.shadowBlur = 0;
+      gctx.fillStyle = '#77D6A6';
+    }
+    gctx.beginPath(); gctx.arc(n.x, n.y, r, 0, Math.PI * 2); gctx.fill();
+    gctx.shadowBlur = 0;
+    if (n.group === 0) {
+      gctx.fillStyle = '#06120C';
+      gctx.font = '700 11px JetBrains Mono, monospace';
+      gctx.textAlign = 'center'; gctx.textBaseline = 'middle';
+      gctx.fillText('0xzare', n.x, n.y);
+      gctx.fillStyle = '#E8F5EE';
+      gctx.font = '700 15px Inter, sans-serif';
+      gctx.fillText(n.label, n.x, n.y + r + 18);
+    } else if (n.group === 1) {
+      gctx.fillStyle = '#7EE2A8';
+      gctx.font = '600 13px Inter, sans-serif';
+      gctx.textAlign = 'center'; gctx.textBaseline = 'middle';
+      gctx.fillText(n.label, n.x, n.y + r + 14);
+    } else {
+      gctx.fillStyle = a === 1 && gHover ? '#E8F5EE' : '#9DB8AA';
+      gctx.font = '11.5px JetBrains Mono, monospace';
+      gctx.textAlign = 'center'; gctx.textBaseline = 'middle';
+      gctx.fillText(n.label, n.x, n.y + r + 12);
+    }
+    gctx.globalAlpha = 1;
+  }
+}
+function gLoop() { gTick(); gDraw(); requestAnimationFrame(gLoop); }
+gLoop();
+function gPos(e) {
+  var rect = gcv.getBoundingClientRect();
+  var t = e.touches ? e.touches[0] : e;
+  return { x: t.clientX - rect.left, y: t.clientY - rect.top };
+}
+function gFind(p) {
+  for (var i = GNODES.length - 1; i >= 0; i--) {
+    var n = GNODES[i];
+    var dx = n.x - p.x, dy = n.y - p.y;
+    if (Math.sqrt(dx * dx + dy * dy) < gRadius(n) + 9) return n;
+  }
+  return null;
+}
+gcv.addEventListener('mousemove', function (e) {
+  var p = gPos(e);
+  if (gDrag) { gDrag.x = p.x; gDrag.y = p.y; gDrag.vx = 0; gDrag.vy = 0; return; }
+  gHover = gFind(p);
+  gcv.style.cursor = gHover ? 'pointer' : 'grab';
+});
+gcv.addEventListener('mousedown', function (e) {
+  gDrag = gFind(gPos(e));
+  if (gDrag) gcv.style.cursor = 'grabbing';
+});
+window.addEventListener('mouseup', function () { gDrag = null; });
+gcv.addEventListener('mouseleave', function () { gHover = null; gDrag = null; });
+gcv.addEventListener('touchstart', function (e) {
+  var n = gFind(gPos(e));
+  if (n) { gDrag = n; gHover = n; e.preventDefault(); }
+}, { passive: false });
+gcv.addEventListener('touchmove', function (e) {
+  if (gDrag) {
+    var p = gPos(e);
+    gDrag.x = p.x; gDrag.y = p.y; gDrag.vx = 0; gDrag.vy = 0;
+    e.preventDefault();
+  }
+}, { passive: false });
+window.addEventListener('touchend', function () { gDrag = null; gHover = null; });
 
 // scroll reveal
 var io = new IntersectionObserver(function (entries) {
